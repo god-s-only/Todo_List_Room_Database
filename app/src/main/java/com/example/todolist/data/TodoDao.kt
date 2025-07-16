@@ -19,7 +19,7 @@ interface TodoDao {
     fun getAllTodos(): Flow<List<Todo>>
 
     @Query("SELECT * FROM todo_table where id = :id")
-    fun getTodo(id: Int): Todo?
+    fun getTodo(id: Int?): Todo?
 
 
 }

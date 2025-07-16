@@ -14,12 +14,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -71,7 +73,14 @@ fun TodoListScreen(
         }
 
     }
-    Scaffold(modifier = Modifier.fillMaxSize()) {
+    Scaffold(modifier = Modifier.fillMaxSize(),
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                viewModel.onEvent(TodoEvent.OnAddTodo)
+            }) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+            }
+        }) {
         Column(modifier = Modifier.fillMaxSize()
             .padding(it)) {
             LazyColumn {
@@ -90,7 +99,7 @@ fun TodoListScreen(
 
 }
 @Composable
-fun TodoItem(todoItem: Todo){
+fun TodoItem(todoItem: Todo, viewModel: TodoViewModel = hiltViewModel()){
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -111,7 +120,7 @@ fun TodoItem(todoItem: Todo){
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(text = todoItem.description ?: "", maxLines = 5, overflow = TextOverflow.Ellipsis, fontSize = 20.sp)
                 }
-                IconButton(onClick = {}) {
+                IconButton(onClick = {viewModel.onEvent(TodoEvent.OnDeleteTodo(todoItem))}) {
                     Icon(imageVector = Icons.Filled.Delete, contentDescription = "Delete")
                 }
             }

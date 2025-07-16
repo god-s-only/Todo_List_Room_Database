@@ -21,10 +21,10 @@ object AppModule {
     @Singleton
     fun provideTodoDatabase(app: Application): TodoDatabase{
         return Room.databaseBuilder(
-            app,
-            TodoDatabase::class.java,
-            "todo_database"
-        ).build()
+                app,
+                TodoDatabase::class.java,
+                "todo_database"
+            ).fallbackToDestructiveMigration(false).build()
     }
 
     @Provides
