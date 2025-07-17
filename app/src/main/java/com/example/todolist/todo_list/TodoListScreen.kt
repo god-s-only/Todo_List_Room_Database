@@ -1,6 +1,7 @@
 package com.example.todolist.todo_list
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,15 +53,15 @@ fun TodoListScreen(
     val todos = viewModel.todos.collectAsState(initial = emptyList())
     val snackbarState = rememberBottomSheetScaffoldState()
     LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect{ event ->
+        viewModel.uiEvent.collect { event ->
             when(event){
                 is UIEvent.Navigate -> {
                     onNavigate(event)
                 }
                 is UIEvent.ShowSnackBar -> {
                     val result = snackbarState.snackbarHostState.showSnackbar(
-                        event.message,
-                        event.action
+                        message = event.message,
+                        actionLabel = event.action
                     )
                     if(result == SnackbarResult.ActionPerformed){
                         viewModel.onEvent(TodoEvent.OnUndoTodoClick)
@@ -103,6 +104,7 @@ fun TodoItem(todoItem: Todo, viewModel: TodoViewModel = hiltViewModel()){
         Card(
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable { viewModel.onEvent(TodoEvent.OnTodoClick(todoItem)) }
                 .size(80.dp),
             border = BorderStroke(1.dp, color = Color.Black),
             colors = CardDefaults.cardColors().copy(

@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditViewModel @Inject constructor(
     private val repository: TodoRepository,
-    val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ): ViewModel(){
 
     private val _uiEvent = Channel<UIEvent>()
@@ -34,11 +34,14 @@ class AddEditViewModel @Inject constructor(
     init {
         val todoId = savedStateHandle.get<Int>("todoId")
         if(todoId != -1){
-            repository.getTodo(todoId)?.let { todo ->
-                title = todo.title
-                description = todo.description ?: ""
-                this@AddEditViewModel.todo = todo
+            viewModelScope.launch {
+                repository.getTodo(todoId)?.let { todo ->
+                    title = todo.title
+                    description = todo.description ?: ""
+                    this@AddEditViewModel.todo = todo
+                }
             }
+
         }
     }
 
